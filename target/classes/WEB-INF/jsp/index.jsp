@@ -19,7 +19,6 @@
     <ul class="nav navbar-nav">
       <li class="active"><a href="/">All Topics</a></li>
       <li><a href="newTopic">New Topic</a></li>
-      <li><a href="uploadFiles">Upload Files</a></li>
     </ul>
   </div>
 </nav>
@@ -30,7 +29,6 @@
 			<table class="table table-striped">
 			    <thead>
 			      <tr>
-			        <th>Id</th>
 			        <th>Topic name</th>
 			        <th>Description</th>
 			        <th>Image</th>
@@ -42,7 +40,6 @@
 			      <tr>
 			      	<c:forEach var="topic" items ="${topics}">
 			      		<tr> 
-			      			<td>${topic.id}</td>
 			      			<td>${topic.name}</td>
 			      			<td>${topic.description}</td>
 			      			<td><img src="/img/uploaded_img/${topic.attachment.name}.${topic.attachment.extension}"
@@ -66,11 +63,25 @@
 			      <label for="description">Description</label>
 			      <input type="text" class="form-control" value="${topic.description}" id="description" name="description">
 			    </div>
-			    
-			    <div class="form-group">
+				
+				<c:choose>
+				<c:when test="${mode == 'TOPIC_NEW'}" >
+				 <div class="form-group">
 			      <label for="file">Attachment</label>
-			      <input type="file" class="form-control" value="${topic.attachment}" id="file" name="file">
+			      <input type="file" class="form-control" id="file" name="file">
 			    </div>
+				</c:when >
+				<c:otherwise>
+				<div class="form-group">
+			      <label for="file">Attachment</label>
+			      <img src="/img/uploaded_img/${topic.attachment.name}.${topic.attachment.extension}"
+			      width = 30px height = 30px ></img>
+			      
+			      <input type="file" class="form-control" id="file" name="file">
+			    </div>
+				</c:otherwise> 
+			    </c:choose>
+			    
 			    <button type="submit" class="btn btn-default">Submit</button>
 			  </form>
 		</c:when>

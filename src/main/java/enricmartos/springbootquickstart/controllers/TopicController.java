@@ -58,19 +58,37 @@ public class TopicController {
 	@RequestMapping(value ="/save", method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	//@Request body indica que la instància de topic prové del cos de la petició 
 	public void addTopic(@ModelAttribute Topic topic, @RequestParam("file") MultipartFile file, HttpServletRequest req, HttpServletResponse res) throws IOException {
+		if (file.isEmpty()) {
+			Topic topicStored = topicService.getTopic(topic.getId());
+			Attachment attach = topicStored.getAttachment();
+			String attachName = attach.getName();
+			System.out.println("Current Attachment: " + attachName);
+			topic.setAttachment(attach);
+			topicService.addTopic(topic);
+		} else {
+			String fileNameComplete = file.getOriginalFilename();
+			String[] parts = fileNameComplete.split(Pattern.quote("."));
+			String name = parts[0]; 
+			String extension = parts[1];
+			
+			Attachment attach = new Attachment(name, extension);
+			attachService.addAttachment(attach);
+			
+			topic.setAttachment(attach);
+			topicService.addTopic(topic);
+			writeFile(file);
+		}
 		
-		String fileNameComplete = file.getOriginalFilename();
-		String[] parts = fileNameComplete.split(Pattern.quote("."));
-		String name = parts[0]; 
-		String extension = parts[1]; 
-		
-		Attachment attach = new Attachment(name, extension);
-		attachService.addAttachment(attach);
-//		Topic topicComplete = new Topic(topic.getName(), topic.getDescription(), attach);
-		topic.setAttachment(attach);
-//		topicService.addTopic(topicComplete);
-		topicService.addTopic(topic);
-		writeFile(file);
+//		String fileNameComplete = file.getOriginalFilename();
+//		String[] parts = fileNameComplete.split(Pattern.quote("."));
+//		String name = parts[0]; 
+//		String extension = parts[1]; 
+//		
+//		Attachment attach = new Attachment(name, extension);
+//		attachService.addAttachment(attach);
+//		topic.setAttachment(attach);
+//		topicService.addTopic(topic);
+//		writeFile(file);
 		req.setAttribute("topics", topicService.getAllTopics());
 		req.setAttribute("mode", "TOPIC_VIEW");
 		
