@@ -42,8 +42,14 @@
 			      		<tr> 
 			      			<td>${topic.name}</td>
 			      			<td>${topic.description}</td>
-			      			<td><img src="/img/uploaded_img/${topic.attachment.name}.${topic.attachment.extension}"
-			      			width = 30px height = 30px ></img> </td>
+			      			<td>
+			      			<c:choose>
+			      			<c:when test="${topic.attachment != null}">
+			      			<img src="/img/uploaded_img/${topic.attachment.name}.${topic.attachment.extension}"
+			      			width = 50px height = 50px ></img>
+			      			</c:when>
+			      			</c:choose>
+			      			</td>
 			      			<td><a href="updateTopic?id=${topic.id}"><div class="glyphicon glyphicon-pencil"></div></a></td>
 			      			<td><a href="deleteTopic?id=${topic.id}"><div class="glyphicon glyphicon-trash"></div></a></td>
 			      		</tr>
@@ -57,11 +63,13 @@
 			<input type="hidden" class="form-control" value="${topic.id}" id="id" name="id">
 			    <div class="form-group">
 			      <label for="name">Name</label>
-			      <input type="text" class="form-control" value="${topic.name}" id="name" name="name">
+			      <input type="text" class="form-control" value="${topic.name}" 
+			      id="name" name="name" placeholder="Type the name of your topic">
 			    </div>
 			    <div class="form-group">
 			      <label for="description">Description</label>
-			      <input type="text" class="form-control" value="${topic.description}" id="description" name="description">
+			      <input type="text" class="form-control" value="${topic.description}"
+			       id="description" name="description" placeholder="Type the description of your topic">
 			    </div>
 				
 				<c:choose>
@@ -71,12 +79,17 @@
 			      <input type="file" class="form-control" id="file" name="file">
 			    </div>
 				</c:when >
-				<c:otherwise>
+				<c:otherwise> <%-- Edit mode --%>
 				<div class="form-group">
 			      <label for="file">Attachment</label>
+			      
+			      <c:choose> <%-- Topic with attachment-> Show thumbnail --%>
+			      <c:when test="${topic.attachment != null}">
 			      <img src="/img/uploaded_img/${topic.attachment.name}.${topic.attachment.extension}"
 			      width = 30px height = 30px ></img>
-			      
+			      </c:when>
+			      </c:choose>
+
 			      <input type="file" class="form-control" id="file" name="file">
 			    </div>
 				</c:otherwise> 

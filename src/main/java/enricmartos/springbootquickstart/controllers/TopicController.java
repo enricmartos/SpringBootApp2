@@ -58,37 +58,29 @@ public class TopicController {
 	@RequestMapping(value ="/save", method=RequestMethod.POST, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	//@Request body indica que la instància de topic prové del cos de la petició 
 	public void addTopic(@ModelAttribute Topic topic, @RequestParam("file") MultipartFile file, HttpServletRequest req, HttpServletResponse res) throws IOException {
-		if (file.isEmpty()) {
+		Attachment attach = null;
+		//EDIT TOPIC MODE
+		if (file.isEmpty() && topic.getId() != null) {
 			Topic topicStored = topicService.getTopic(topic.getId());
-			Attachment attach = topicStored.getAttachment();
-			String attachName = attach.getName();
-			System.out.println("Current Attachment: " + attachName);
-			topic.setAttachment(attach);
-			topicService.addTopic(topic);
-		} else {
+			attach = topicStored.getAttachment();
+
+		} 
+		//NEW TOPIC MODE WITH A NON EMPTY UPLOADED FILE
+		else if (!file.isEmpty()){
 			String fileNameComplete = file.getOriginalFilename();
 			String[] parts = fileNameComplete.split(Pattern.quote("."));
 			String name = parts[0]; 
 			String extension = parts[1];
 			
-			Attachment attach = new Attachment(name, extension);
+			attach = new Attachment(name, extension);
 			attachService.addAttachment(attach);
-			
-			topic.setAttachment(attach);
-			topicService.addTopic(topic);
+
 			writeFile(file);
 		}
 		
-//		String fileNameComplete = file.getOriginalFilename();
-//		String[] parts = fileNameComplete.split(Pattern.quote("."));
-//		String name = parts[0]; 
-//		String extension = parts[1]; 
-//		
-//		Attachment attach = new Attachment(name, extension);
-//		attachService.addAttachment(attach);
-//		topic.setAttachment(attach);
-//		topicService.addTopic(topic);
-//		writeFile(file);
+		topic.setAttachment(attach);
+		topicService.addTopic(topic);
+	
 		req.setAttribute("topics", topicService.getAllTopics());
 		req.setAttribute("mode", "TOPIC_VIEW");
 		
