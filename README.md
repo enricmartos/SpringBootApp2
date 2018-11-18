@@ -1,4 +1,4 @@
-# SpringBootApp
+# Topic manager
 
 ## Description
 
