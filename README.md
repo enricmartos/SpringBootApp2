@@ -6,8 +6,9 @@ This application is a topic management system which allows you to see, edit and 
 
 ## Personal goals
 
-- Keep getting familiar with Spring Boot framework and learn how to perform basic CRUD operations
-- Implement and manage file uploads such as images
+- To get familiar with Spring Boot framework and learn how to perform basic CRUD operations
+- To acquire experience with ORM (Object-Relational Mapping) and JPA (Java Persistence API)
+- To implement and manage file uploads such as images
 
 ## Core technologies
 
